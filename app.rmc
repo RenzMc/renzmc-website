@@ -1,21 +1,36 @@
 // ============================================
-// RenzMcLang Documentation Website
+// RenzMcLang Example
 // 100% Pure RenzMcLang Code with Flask
 // ============================================
+
+// Bagian ini adalah program utama untuk menjalankan website dokumentasi RenzMcLang.
+// Program ditulis full menggunakan sintaks khas RenzMcLang tapi tetap memanggil Python (Flask, Markdown, dll).
+// Jadi, bisa dibilang ini seperti jembatan antara bahasa custom RenzMcLang dengan dunia nyata (Python + Flask).
+// Website ini dirancang untuk menampilkan file dokumentasi dalam format markdown
+// lalu dikonversi otomatis menjadi HTML agar mudah dibaca di browser.
+// Ada sistem template, error handling, konversi markdown, dan ekstraksi metadata.
+// Semua fungsi dibuat modular agar lebih mudah dikelola dan dipahami.
 
 tampilkan "=== RenzMcLang Documentation Website ==="
 tampilkan "Initializing Flask application..."
 
-// Import Python libraries
+// Import library Python yang diperlukan
+// - flask → framework web Python
+// - markdown2 → library untuk convert teks markdown ke HTML
+// - os → library sistem operasi (untuk akses file, path, dll)
+// - re → regular expression (untuk ekstrak data spesifik dari teks)
 impor_python "flask" sebagai Flask
 impor_python "markdown2"
 impor_python "os"
 impor_python "re"
 
-// Create Flask app
+// Membuat objek Flask sebagai inti aplikasi web.
+// Objek `app` ini yang nantinya akan menangani request, route, dan response.
 app itu panggil_python Flask.Flask("renzmc_docs")
 
-// Configure Flask
+// Konfigurasi Flask, agar aplikasi lebih fleksibel.
+// - TEMPLATES_AUTO_RELOAD: True → agar template otomatis reload tanpa restart server
+// - SEND_FILE_MAX_AGE_DEFAULT: 0 → menonaktifkan cache file statis (bagus untuk dev)
 panggil_python app.config.update({
     "TEMPLATES_AUTO_RELOAD": benar,
     "SEND_FILE_MAX_AGE_DEFAULT": 0
@@ -27,14 +42,20 @@ tampilkan "✓ Flask app created successfully"
 // Helper Functions
 // ============================================
 
+// Di bawah ini adalah kumpulan fungsi bantu (helper functions).
+// Tujuannya agar kode lebih rapih, reusable, dan modular.
+// Setiap fungsi dibuat khusus untuk tugas tertentu seperti membaca file,
+// mengubah markdown ke HTML, atau mengekstrak metadata dari teks.
+
+// Fungsi baca_file_markdown: membaca file markdown dari folder docs.
 fungsi baca_file_markdown(nama_file):
     tampilkan f"Reading markdown file: {nama_file}"
     
-    // Construct file path
+    // Tentukan path file markdown (misal docs/intro.md)
     file_path itu f"docs/{nama_file}.md"
     
     coba
-        // Read file content
+        // Coba buka file dengan mode baca UTF-8
         dengan buka(file_path, "r", encoding="utf-8") sebagai f
             konten itu f.read()
         selesai
@@ -42,39 +63,56 @@ fungsi baca_file_markdown(nama_file):
         tampilkan f"✓ File read successfully: {file_path}"
         hasil konten
     tangkap Exception sebagai e
+        // Jika ada error (file tidak ada atau rusak), tampilkan pesan error
         tampilkan f"✗ Error reading file: {e}"
         hasil salah
     selesai
 selesai
 
+// Fungsi konversi_markdown_ke_html: mengubah teks markdown jadi HTML.
+// Fungsi ini menggunakan library markdown2 agar mendukung fitur-fitur ekstra.
 fungsi konversi_markdown_ke_html(markdown_text):
     tampilkan "Converting markdown to HTML..."
     
     coba
-        // Convert markdown to HTML using markdown2
+        // Fitur tambahan markdown2:
+        // - fenced-code-blocks: blok kode pakai triple backtick
+        // - tables: mendukung tabel markdown
+        // - header-ids: otomatis buat ID di heading
+        // - code-friendly: agar tanda khusus tidak rusak
+        // - cuddled-lists: dukung format list lebih fleksibel
+        // - strike: teks coret
+        // - task_list: checkbox di markdown
         extras_list itu ["fenced-code-blocks", "tables", "header-ids", "code-friendly", "cuddled-lists", "strike", "task_list"]
+        
+        // Panggil markdown2 untuk konversi teks
         html itu panggil_python markdown2.markdown(markdown_text, extras=extras_list)
         
         tampilkan "✓ Markdown converted successfully"
         hasil html
     tangkap Exception sebagai e
+        // Jika konversi gagal, tampilkan pesan error sederhana ke user
         tampilkan f"✗ Error converting markdown: {e}"
         hasil "<p>Error converting markdown content</p>"
     selesai
 selesai
 
+// Fungsi ekstrak_metadata: mengambil info tambahan dari markdown.
+// Metadata biasanya ditulis di atas dokumen, misal:
+// **Version:** 1.0
+// **Last Updated:** 2025-10-05
 fungsi ekstrak_metadata(markdown_text):
     tampilkan "Extracting metadata from markdown..."
     
     metadata itu {}
     
-    // Extract version
+    // Ambil versi pakai regex
     version_match itu panggil_python re.search(r"\*\*Version:\*\*\s*(\S+)", markdown_text)
     jika version_match
         metadata["version"] itu panggil_python version_match.group(1)
     selesai
     
-    // Extract last updated
+    // Ambil informasi "last updated" pakai regex
     updated_match itu panggil_python re.search(r"\*\*Last Updated:\*\*\s*(\S+)", markdown_text)
     jika updated_match
         metadata["updated"] itu panggil_python updated_match.group(1)
@@ -84,8 +122,10 @@ fungsi ekstrak_metadata(markdown_text):
     hasil metadata
 selesai
 
+// Fungsi dapatkan_judul_dari_file: bikin judul rapi dari nama file.
+// Misal nama_file = "cara-install" → hasil = "Cara Install"
 fungsi dapatkan_judul_dari_file(nama_file):
-    // Use Python's title() method for proper capitalization
+    // Gunakan method title() di Python agar kapitalisasi otomatis
     judul_python itu panggil_python nama_file.replace("-", " ").title()
     hasil judul_python
 selesai
@@ -96,55 +136,82 @@ tampilkan "✓ Helper functions defined"
 // Routes
 // ============================================
 
+// Di bagian ini kita mendefinisikan route/endpoint dari web.
+// Route adalah URL yang bisa diakses user, lalu diarahkan ke fungsi tertentu.
+// Contoh: "/" → home, "/docs/<nama_file>" → tampilkan dokumentasi tertentu.
+
 tampilkan "Defining routes..."
 
-// Define route functions
+// Fungsi home: menampilkan halaman depan (home page).
 fungsi home():
     tampilkan "→ Serving home page"
     hasil panggil_python Flask.render_template("home.html")
 selesai
 
+// Fungsi show_doc: menampilkan halaman dokumentasi sesuai nama file.
+// Misal "/docs/intro" → akan membaca file docs/intro.md lalu ditampilkan di web.
 fungsi show_doc(doc_name):
     tampilkan f"→ Serving documentation: {doc_name}"
     
-    // Read markdown file
+    // Baca isi file markdown
     markdown_content itu baca_file_markdown(doc_name)
     
     jika markdown_content == salah
+        // Kalau file tidak ada, tampilkan halaman 404
         tampilkan f"✗ Document not found: {doc_name}"
-        hasil panggil_python Flask.render_template("doc.html", title="Document Not Found", content="<h1>404 - Document Not Found</h1><p>The requested documentation page could not be found.</p>", meta={})
+        hasil panggil_python Flask.render_template(
+            "doc.html", 
+            title="Document Not Found", 
+            content="<h1>404 - Document Not Found</h1><p>The requested documentation page could not be found.</p>", 
+            meta={}
+        )
     selesai
     
-    // Extract metadata
+    // Ambil metadata dari file
     metadata itu ekstrak_metadata(markdown_content)
     
-    // Convert to HTML
+    // Konversi markdown → HTML
     html_content itu konversi_markdown_ke_html(markdown_content)
     
-    // Get title
+    // Dapatkan judul berdasarkan nama file
     judul itu dapatkan_judul_dari_file(doc_name)
     
     tampilkan f"✓ Rendering document: {judul}"
     
-    // Render template
+    // Render halaman HTML dengan template
     hasil panggil_python Flask.render_template("doc.html", title=judul, content=html_content, meta=metadata)
 selesai
 
+// Fungsi page_not_found: handler untuk error 404.
+// Akan dipanggil otomatis jika user buka halaman yang tidak ada.
 fungsi page_not_found(e):
     tampilkan f"✗ 404 Error: {e}"
-    hasil panggil_python Flask.render_template("doc.html", title="Page Not Found", content="<h1>404 - Page Not Found</h1><p>The page you are looking for does not exist.</p>", meta={}), 404
+    hasil panggil_python Flask.render_template(
+        "doc.html", 
+        title="Page Not Found", 
+        content="<h1>404 - Page Not Found</h1><p>The page you are looking for does not exist.</p>", 
+        meta={}
+    ), 404
 selesai
 
+// Fungsi internal_error: handler untuk error 500 (server error).
+// Akan ditampilkan jika ada bug atau masalah internal.
 fungsi internal_error(e):
     tampilkan f"✗ 500 Error: {e}"
-    hasil panggil_python Flask.render_template("doc.html", title="Internal Server Error", content="<h1>500 - Internal Server Error</h1><p>Something went wrong on our end. Please try again later.</p>", meta={}), 500
+    hasil panggil_python Flask.render_template(
+        "doc.html", 
+        title="Internal Server Error", 
+        content="<h1>500 - Internal Server Error</h1><p>Something went wrong on our end. Please try again later.</p>", 
+        meta={}
+    ), 500
 selesai
 
-// Register routes using add_url_rule
+// Daftarkan route menggunakan add_url_rule.
+// "/" diarahkan ke fungsi home, "/docs/<doc_name>" diarahkan ke show_doc.
 panggil_python app.add_url_rule("/", "home", home)
 panggil_python app.add_url_rule("/docs/<doc_name>", "show_doc", show_doc)
 
-// Register error handlers
+// Daftarkan handler error agar otomatis dipanggil
 panggil_python app.register_error_handler(404, page_not_found)
 panggil_python app.register_error_handler(500, internal_error)
 
@@ -153,6 +220,9 @@ tampilkan "✓ Routes and error handlers configured"
 // ============================================
 // Main
 // ============================================
+
+// Bagian main ini yang akan jalan pertama kali saat program dieksekusi.
+// Menampilkan info startup, lalu menjalankan server Flask.
 
 tampilkan ""
 tampilkan "==================================="
@@ -163,5 +233,6 @@ tampilkan "Server will start on http://0.0.0.0:9000"
 tampilkan "Press CTRL+C to stop the server"
 tampilkan ""
 
-// Run the Flask app
+// Jalankan aplikasi Flask di host 0.0.0.0 port 9000.
+// Debug = False agar lebih stabil (tidak reload otomatis).
 panggil_python app.run(host="0.0.0.0", port=port, debug=salah)
