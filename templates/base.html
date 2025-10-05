@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dokumentasi lengkap RenzMcLang - Bahasa pemrograman berbasis Bahasa Indonesia">
+    <meta name="keywords" content="RenzMcLang, bahasa pemrograman, Indonesia, programming, dokumentasi">
+    <meta name="author" content="RenzMc">
+    <title>{% block title %}RenzMcLang Documentation{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="/" class="logo">
+                <div class="logo-icon">🚀</div>
+                <div class="logo-text">
+                    <h1>RenzMcLang</h1>
+                    <p>Bahasa Pemrograman Indonesia</p>
+                </div>
+            </a>
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/docs/installation">Dokumentasi</a></li>
+                    <li><a href="https://github.com/RenzMc/RenzmcLang" target="_blank">GitHub</a></li>
+                    <li><a href="https://pypi.org/project/renzmc/" target="_blank">PyPI</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h3 class="sidebar-title">📚 Dokumentasi</h3>
+            <ul class="sidebar-menu">
+                <li><a href="/" class="{% if request.path == '/' %}active{% endif %}">🏠 Home</a></li>
+                <li><a href="/docs/README" class="{% if 'README' in request.path %}active{% endif %}">📖 README</a></li>
+                <li><a href="/docs/installation" class="{% if 'installation' in request.path %}active{% endif %}">📦 Installation</a></li>
+                <li><a href="/docs/syntax-basics" class="{% if 'syntax-basics' in request.path %}active{% endif %}">📝 Syntax Basics</a></li>
+                <li><a href="/docs/builtin-functions" class="{% if 'builtin-functions' in request.path %}active{% endif %}">🔧 Built-in Functions</a></li>
+                <li><a href="/docs/advanced-features" class="{% if 'advanced-features' in request.path %}active{% endif %}">🚀 Advanced Features</a></li>
+                <li><a href="/docs/python-integration" class="{% if 'python-integration' in request.path %}active{% endif %}">🐍 Python Integration</a></li>
+                <li><a href="/docs/http-client-guide" class="{% if 'http-client-guide' in request.path %}active{% endif %}">🌐 HTTP Client Guide</a></li>
+                <li><a href="/docs/quick-reference" class="{% if 'quick-reference' in request.path %}active{% endif %}">⚡ Quick Reference</a></li>
+                <li><a href="/docs/examples" class="{% if 'examples' in request.path %}active{% endif %}">💡 Examples</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 RenzMcLang. Made with ❤️ for Indonesian developers</p>
+        <p>
+            <a href="https://github.com/RenzMc/RenzmcLang" target="_blank">GitHub</a> | 
+            <a href="https://pypi.org/project/renzmc/" target="_blank">PyPI</a> | 
+            <a href="mailto:renzaja11@gmail.com">Contact</a>
+        </p>
+        <p style="margin-top: 1rem; font-size: 0.875rem; opacity: 0.7;">
+            "Coding in your native language, thinking in your native way"
+        </p>
+    </footer>
+
+    <!-- Highlight.js for syntax highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>
+        // Initialize syntax highlighting
+        hljs.highlightAll();
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

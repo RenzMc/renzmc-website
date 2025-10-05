@@ -1,0 +1,167 @@
+// ============================================
+// RenzMcLang Documentation Website
+// 100% Pure RenzMcLang Code with Flask
+// ============================================
+
+tampilkan "=== RenzMcLang Documentation Website ==="
+tampilkan "Initializing Flask application..."
+
+// Import Python libraries
+impor_python "flask" sebagai Flask
+impor_python "markdown2"
+impor_python "os"
+impor_python "re"
+
+// Create Flask app
+app itu panggil_python Flask.Flask("renzmc_docs")
+
+// Configure Flask
+panggil_python app.config.update({
+    "TEMPLATES_AUTO_RELOAD": benar,
+    "SEND_FILE_MAX_AGE_DEFAULT": 0
+})
+
+tampilkan "✓ Flask app created successfully"
+
+// ============================================
+// Helper Functions
+// ============================================
+
+fungsi baca_file_markdown(nama_file):
+    tampilkan f"Reading markdown file: {nama_file}"
+    
+    // Construct file path
+    file_path itu f"docs/{nama_file}.md"
+    
+    coba
+        // Read file content
+        dengan buka(file_path, "r", encoding="utf-8") sebagai f
+            konten itu f.read()
+        selesai
+        
+        tampilkan f"✓ File read successfully: {file_path}"
+        hasil konten
+    tangkap Exception sebagai e
+        tampilkan f"✗ Error reading file: {e}"
+        hasil salah
+    selesai
+selesai
+
+fungsi konversi_markdown_ke_html(markdown_text):
+    tampilkan "Converting markdown to HTML..."
+    
+    coba
+        // Convert markdown to HTML using markdown2
+        extras_list itu ["fenced-code-blocks", "tables", "header-ids", "code-friendly", "cuddled-lists", "strike", "task_list"]
+        html itu panggil_python markdown2.markdown(markdown_text, extras=extras_list)
+        
+        tampilkan "✓ Markdown converted successfully"
+        hasil html
+    tangkap Exception sebagai e
+        tampilkan f"✗ Error converting markdown: {e}"
+        hasil "<p>Error converting markdown content</p>"
+    selesai
+selesai
+
+fungsi ekstrak_metadata(markdown_text):
+    tampilkan "Extracting metadata from markdown..."
+    
+    metadata itu {}
+    
+    // Extract version
+    version_match itu panggil_python re.search(r"\*\*Version:\*\*\s*(\S+)", markdown_text)
+    jika version_match
+        metadata["version"] itu panggil_python version_match.group(1)
+    selesai
+    
+    // Extract last updated
+    updated_match itu panggil_python re.search(r"\*\*Last Updated:\*\*\s*(\S+)", markdown_text)
+    jika updated_match
+        metadata["updated"] itu panggil_python updated_match.group(1)
+    selesai
+    
+    tampilkan f"✓ Metadata extracted: {metadata}"
+    hasil metadata
+selesai
+
+fungsi dapatkan_judul_dari_file(nama_file):
+    // Use Python's title() method for proper capitalization
+    judul_python itu panggil_python nama_file.replace("-", " ").title()
+    hasil judul_python
+selesai
+
+tampilkan "✓ Helper functions defined"
+
+// ============================================
+// Routes
+// ============================================
+
+tampilkan "Defining routes..."
+
+// Define route functions
+fungsi home():
+    tampilkan "→ Serving home page"
+    hasil panggil_python Flask.render_template("home.html")
+selesai
+
+fungsi show_doc(doc_name):
+    tampilkan f"→ Serving documentation: {doc_name}"
+    
+    // Read markdown file
+    markdown_content itu baca_file_markdown(doc_name)
+    
+    jika markdown_content == salah
+        tampilkan f"✗ Document not found: {doc_name}"
+        hasil panggil_python Flask.render_template("doc.html", title="Document Not Found", content="<h1>404 - Document Not Found</h1><p>The requested documentation page could not be found.</p>", meta={})
+    selesai
+    
+    // Extract metadata
+    metadata itu ekstrak_metadata(markdown_content)
+    
+    // Convert to HTML
+    html_content itu konversi_markdown_ke_html(markdown_content)
+    
+    // Get title
+    judul itu dapatkan_judul_dari_file(doc_name)
+    
+    tampilkan f"✓ Rendering document: {judul}"
+    
+    // Render template
+    hasil panggil_python Flask.render_template("doc.html", title=judul, content=html_content, meta=metadata)
+selesai
+
+fungsi page_not_found(e):
+    tampilkan f"✗ 404 Error: {e}"
+    hasil panggil_python Flask.render_template("doc.html", title="Page Not Found", content="<h1>404 - Page Not Found</h1><p>The page you are looking for does not exist.</p>", meta={}), 404
+selesai
+
+fungsi internal_error(e):
+    tampilkan f"✗ 500 Error: {e}"
+    hasil panggil_python Flask.render_template("doc.html", title="Internal Server Error", content="<h1>500 - Internal Server Error</h1><p>Something went wrong on our end. Please try again later.</p>", meta={}), 500
+selesai
+
+// Register routes using add_url_rule
+panggil_python app.add_url_rule("/", "home", home)
+panggil_python app.add_url_rule("/docs/<doc_name>", "show_doc", show_doc)
+
+// Register error handlers
+panggil_python app.register_error_handler(404, page_not_found)
+panggil_python app.register_error_handler(500, internal_error)
+
+tampilkan "✓ Routes and error handlers configured"
+
+// ============================================
+// Main
+// ============================================
+
+tampilkan ""
+tampilkan "==================================="
+tampilkan "🚀 Starting RenzMcLang Documentation Website"
+tampilkan "==================================="
+tampilkan ""
+tampilkan "Server will start on http://0.0.0.0:9000"
+tampilkan "Press CTRL+C to stop the server"
+tampilkan ""
+
+// Run the Flask app
+panggil_python app.run(host="0.0.0.0", port=9000, debug=salah)

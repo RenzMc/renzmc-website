@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block title %}RenzMcLang - Bahasa Pemrograman Berbasis Bahasa Indonesia{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero">
+    <h1>🚀 RenzMcLang</h1>
+    <p>Bahasa Pemrograman Berbasis Bahasa Indonesia yang Modern dan Powerful</p>
+    <div class="hero-buttons">
+        <a href="/docs/installation" class="btn btn-primary">Mulai Sekarang</a>
+        <a href="https://github.com/RenzMc/RenzmcLang" target="_blank" class="btn btn-secondary">Lihat di GitHub</a>
+    </div>
+</div>
+
+<!-- Features -->
+<div class="features">
+    <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>Sintaks Bahasa Indonesia</h3>
+        <p>Keyword dalam Bahasa Indonesia yang intuitif, error messages yang helpful, dan dokumentasi lengkap dalam Bahasa Indonesia.</p>
+    </div>
+
+    <div class="feature-card">
+        <div class="feature-icon">🔥</div>
+        <h3>Fitur Modern</h3>
+        <p>Lambda functions, comprehensions, OOP, async/await, error handling yang robust, dan type hints.</p>
+    </div>
+
+    <div class="feature-card">
+        <div class="feature-icon">🔌</div>
+        <h3>Integrasi Python</h3>
+        <p>Import dan gunakan library Python, akses Python builtins, dan interoperability penuh dengan ekosistem Python.</p>
+    </div>
+
+    <div class="feature-card">
+        <div class="feature-icon">📦</div>
+        <h3>Built-in Functions Lengkap</h3>
+        <p>184+ built-in functions untuk string manipulation, math, file operations, JSON, HTTP, database, dan banyak lagi!</p>
+    </div>
+
+    <div class="feature-card">
+        <div class="feature-icon">🌐</div>
+        <h3>HTTP Client Built-in</h3>
+        <p>HTTP client yang powerful dan mudah digunakan tanpa perlu import library eksternal.</p>
+    </div>
+
+    <div class="feature-card">
+        <div class="feature-icon">🎓</div>
+        <h3>Mudah Dipelajari</h3>
+        <p>Dirancang untuk memudahkan pembelajaran pemrograman bagi penutur Bahasa Indonesia.</p>
+    </div>
+</div>
+
+<!-- Quick Start -->
+<div class="doc-content">
+    <h2>🚀 Quick Start</h2>
+    
+    <h3>Instalasi</h3>
+    <pre><code class="language-bash">pip install renzmc</code></pre>
+
+    <h3>Hello World</h3>
+    <pre><code class="language-python">tampilkan "Hello, World!"</code></pre>
+
+    <h3>Variabel dan Tipe Data</h3>
+    <pre><code class="language-python">// Deklarasi variabel
+nama itu "Budi"
+umur itu 25
+tinggi itu 175.5
+is_student itu benar
+
+// List
+hobi itu ["membaca", "coding", "gaming"]
+
+// Dictionary
+profil itu {
+    "nama": "Budi",
+    "umur": 25,
+    "kota": "Jakarta"
+}</code></pre>
+
+    <h3>Control Flow</h3>
+    <pre><code class="language-python">// If-else
+jika umur >= 18
+    tampilkan "Dewasa"
+kalau_tidak
+    tampilkan "Anak-anak"
+selesai
+
+// Ternary operator
+status itu "Lulus" jika nilai >= 60 kalau tidak "Tidak Lulus"</code></pre>
+
+    <h3>Functions</h3>
+    <pre><code class="language-python">// Deklarasi fungsi
+fungsi tambah(a, b):
+    hasil a + b
+selesai
+
+// Lambda function
+kuadrat itu lambda dengan x -> x * x
+
+// Panggil fungsi
+hasil itu tambah(5, 3)
+tampilkan hasil  // Output: 8</code></pre>
+
+    <h3>Python Integration</h3>
+    <pre><code class="language-python">// Import library Python
+impor_python "requests"
+impor_python "json"
+
+// Gunakan library Python
+response itu panggil_python requests.get("https://api.example.com/data")
+data itu panggil_python json.loads(response.text)
+tampilkan data</code></pre>
+
+    <h2>📚 Dokumentasi Lengkap</h2>
+    <p>Lihat dokumentasi lengkap di sidebar untuk mempelajari lebih lanjut tentang:</p>
+    <ul>
+        <li><a href="/docs/installation">Panduan Instalasi</a></li>
+        <li><a href="/docs/syntax-basics">Sintaks Dasar</a></li>
+        <li><a href="/docs/builtin-functions">Built-in Functions</a></li>
+        <li><a href="/docs/advanced-features">OOP dan Advanced Features</a></li>
+        <li><a href="/docs/python-integration">Integrasi Python</a></li>
+        <li><a href="/docs/examples">Contoh Program</a></li>
+    </ul>
+
+    <h2>🎯 Use Cases</h2>
+    <p>RenzMcLang cocok untuk:</p>
+    <ul>
+        <li>📚 <strong>Pembelajaran</strong>: Belajar programming dengan bahasa Indonesia</li>
+        <li>🔬 <strong>Prototyping</strong>: Rapid application development</li>
+        <li>📊 <strong>Data Processing</strong>: Analisis dan transformasi data</li>
+        <li>🌐 <strong>Web Development</strong>: Backend API development</li>
+        <li>🗄️ <strong>Database Operations</strong>: Database management dan queries</li>
+        <li>🤖 <strong>Automation</strong>: Script automation dan task scheduling</li>
+    </ul>
+
+    <h2>🤝 Kontribusi</h2>
+    <p>Kontribusi sangat diterima! Silakan fork repository dan buat pull request.</p>
+    <div class="hero-buttons" style="justify-content: flex-start; margin-top: 1rem;">
+        <a href="https://github.com/RenzMc/RenzmcLang" target="_blank" class="btn btn-primary">Kontribusi di GitHub</a>
+    </div>
+</div>
+{% endblock %}
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
